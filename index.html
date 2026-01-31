@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>基金估值</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body { font-family: system-ui; padding: 16px; }
+input, button {
+  width: 100%; font-size: 18px;
+  padding: 10px; margin-top: 12px;
+}
+.up { color: red; }
+.down { color: green; }
+small { color: #666; }
+</style>
+</head>
+<body>
+
+<input id="code" placeholder="输入基金代码，如 005827">
+<button onclick="go()">查看估值</button>
+<div id="res"></div>
+
+<script>
+function go(){
+  const c=document.getElementById("code").value.trim();
+  if(!c)return alert("请输入基金代码");
+  document.getElementById("res").innerText="加载中…";
+  const s=document.createElement("script");
+  s.src="https://fundgz.1234567.com.cn/js/"+c+".js";
+  document.body.appendChild(s);
+  window.jsonpgz=function(d){
+    if(!d||!d.name){
+      document.getElementById("res").innerText="暂无数据";
+      return;
+    }
+    const cls=d.gszzl>=0?"up":"down";
+    document.getElementById("res").innerHTML=
+      "<b>"+d.name+"</b><br><br>"+
+      "昨日净值："+d.dwjz+"<br>"+
+      "估算净值：<b class='"+cls+"'>"+d.gsz+"</b><br>"+
+      "涨跌幅：<b class='"+cls+"'>"+d.gszzl+"%</b><br>"+
+      "<br><small>仅供参考</small>";
+  }
+}
+</script>
+
+</body>
+</html>
+
